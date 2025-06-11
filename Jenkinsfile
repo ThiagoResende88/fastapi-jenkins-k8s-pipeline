@@ -1,13 +1,15 @@
 pipeline {
     agent any
-      
+
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub'
         KUBECONFIG_CREDENTIALS_ID = 'minikube-kubeconfig'
         DOCKER_IMAGE_NAME = "thiagoresende/fastapi-jenkins-pipeline"
     }
 
+    // 'stages' agrupa todas as etapas do nosso processo
     stages {
+        // Etapa 1: Build da Imagem Docker
         stage('Build Docker Image') {
             steps {
                 dir('backend') {
@@ -18,6 +20,7 @@ pipeline {
             }
         }
 
+        // Etapa 2: Push para o Docker Hub
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
@@ -29,12 +32,12 @@ pipeline {
             }
         }
 
+        // ETAPA FINAL: Deploy no Kubernetes
         stage('Deploy to Kubernetes') {
             steps {
                 withKubeConfig([credentialsId: env.KUBECONFIG_CREDENTIALS_ID]) {
                     script {
                         sh "kubectl set image deployment/fastapi-deployment fastapi-container=${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
-
                         sh "kubectl rollout status deployment/fastapi-deployment"
                     }
                 }
@@ -43,8 +46,8 @@ pipeline {
     }
 
     post {
-        sucess {
+        success {
             chuckNorris()
-        }    
+        }
     }
 }
