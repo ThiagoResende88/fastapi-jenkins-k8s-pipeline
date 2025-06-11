@@ -35,18 +35,17 @@ pipeline {
             }
         }
 
-        // ETAPA NOVA: Deploy no Kubernetes
+        // ETAPA CORRIGIDA: Deploy no Kubernetes
         stage('Deploy to Kubernetes') {
             steps {
-                // Bloco para usar o arquivo de configuração do Kubernetes de forma segura
-                withCredentials([kubeconfigContent(credentialsId: env.KUBECONFIG_CREDENTIALS_ID)]) {
+                // CORREÇÃO: Usando o wrapper 'withKubeConfig' que é o método correto
+                // para carregar as credenciais do tipo kubeconfig.
+                withKubeConfig([kubeconfigId: env.KUBECONFIG_CREDENTIALS_ID]) {
                     script {
                         // Comando para atualizar a imagem do contêiner no deployment existente.
-                        // Ele diz ao Kubernetes para usar a nova imagem que acabamos de enviar (com a tag do build number).
                         sh "kubectl set image deployment/fastapi-deployment fastapi-container=${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
 
                         // Comando para verificar o status do deploy e esperar até que ele seja concluído.
-                        // Isso garante que a nova versão está no ar antes de a pipeline terminar.
                         sh "kubectl rollout status deployment/fastapi-deployment"
                     }
                 }
