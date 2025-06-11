@@ -1,10 +1,6 @@
 pipeline {
     agent any
-    
-    post {
-            chuckNorris()
-    }
-    
+      
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub'
         KUBECONFIG_CREDENTIALS_ID = 'minikube-kubeconfig'
@@ -44,5 +40,9 @@ pipeline {
                 }
             }
         }
+    }
+
+        post {
+            chuckNorris()
     }
 }
