@@ -42,7 +42,9 @@ pipeline {
         }
     }
 
-        post {
+    post {
+        sucess {
             chuckNorris()
+        }    
     }
 }
