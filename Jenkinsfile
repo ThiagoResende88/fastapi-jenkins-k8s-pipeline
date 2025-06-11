@@ -27,5 +27,17 @@ pipeline {
                 }
             }
         }
+         stage('Deploy to Kubernetes') {
+            steps {
+                withCredentials([kubeconfigContent(credentialsId: env.KUBECONFIG_CREDENTIALS_ID)]) {
+                    script{
+                        sh "kubectl set image deployment/fastapi-deployment fastapi-container=${env.DOCKER_IMAGE_NAME}:$env.BUILD_NUMBER}"
+                        sh "kubectl rollout status deployment/fastapi-deployment"
+                    }
+                }
+            }
+        }
     }
 }
+
+    
