@@ -1,11 +1,3 @@
-proximos passo
-
-pegar tudo que o thiago ensinou e passou e ja com o Jenkins na maquina instalado agora vamos ter que subir essa pequena aplicação
-
-aqui deixei pistas para descubrir como subir a aplicação
-
-------
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -31,25 +23,9 @@ aqui deixei pistas para descubrir como subir a aplicação
     </li>
     <li>Adicione suporte a <strong>CORS</strong> no FastAPI para permitir requisições do frontend.</li>
   </ul>
-
-  <h3>2️⃣ Frontend - React</h3>
-  <ul>
-    <li>Crie uma interface simples que:
-      <ul>
-        <li>Mostra a cor de fundo retornada pelo backend.</li>
-        <li>Exibe a imagem aleatória de gato.</li>
-        <li>Exibe a foto aleatória.</li>
-        <li>Mostra o horário atual.</li>
-        <li>Inclui um botão “Susto” para exibir a imagem de susto.</li>
-        <li>Inclui um botão “Sósia” para exibir a imagem aleatória de “quem parece com você”.</li>
-      </ul>
-    </li>
-  </ul>
-
   <h3>3️⃣ Containerização</h3>
   <ul>
     <li>Crie um <code>Dockerfile</code> para o backend.</li>
-    <li>Crie um <code>Dockerfile</code> para o frontend.</li>
     <li>Suba as imagens no <strong>Docker Hub</strong> ou outro registry.</li>
   </ul>
 
@@ -57,8 +33,8 @@ aqui deixei pistas para descubrir como subir a aplicação
   <ul>
     <li>Configure um <code>Jenkinsfile</code> para:
       <ul>
-        <li>Buildar as imagens Docker do backend e frontend.</li>
-        <li>Fazer push das imagens para o registry.</li>
+        <li>Buildar as imagens Docker do backend</li>
+        <li>Fazer push da imagem para o registry.</li>
         <li>Aplicar os manifests no Kubernetes.</li>
       </ul>
     </li>
@@ -78,7 +54,6 @@ aqui deixei pistas para descubrir como subir a aplicação
   <h2>🚀 Entregáveis</h2>
   <ul>
     <li>✅ Backend funcional no FastAPI.</li>
-    <li>✅ Frontend React consumindo os endpoints.</li>
     <li>✅ Dockerfiles para cada app.</li>
     <li>✅ Jenkinsfile com pipeline CI/CD.</li>
     <li>✅ Deploy no Kubernetes local (Minikube ou Rancher).</li>
