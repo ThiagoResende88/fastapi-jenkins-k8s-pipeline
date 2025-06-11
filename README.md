@@ -61,5 +61,6 @@ O `Jenkinsfile` na raiz do projeto orquestra todo o processo de CI/CD.
 ### ✅ Resultado Final
 
 Abaixo, uma imagem da pipeline no Jenkins executando todas as etapas com sucesso.
+![image](https://github.com/user-attachments/assets/514876ab-4db4-4cbc-8b0d-42e576946be9)
 
 
