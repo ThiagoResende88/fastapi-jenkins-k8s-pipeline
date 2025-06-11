@@ -1,12 +1,18 @@
+// Define a pipeline declarativa do Jenkins
 pipeline {
+    // Especifica que o pipeline pode rodar em qualquer agente (nó) disponível do Jenkins
     agent any
 
+    // Define variáveis de ambiente que serão usadas durante a pipeline
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub'
+        KUBECONFIG_CREDENTIALS_ID = 'minikube-kubeconfig'
         DOCKER_IMAGE_NAME = "thiagoresende/fastapi-jenkins-pipeline"
     }
 
+    // 'stages' agrupa todas as etapas do nosso processo
     stages {
+        // Etapa 1: Build da Imagem Docker
         stage('Build Docker Image') {
             steps {
                 dir('backend') {
@@ -17,6 +23,7 @@ pipeline {
             }
         }
 
+        // Etapa 2: Push para o Docker Hub
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
@@ -27,11 +34,19 @@ pipeline {
                 }
             }
         }
-         stage('Deploy to Kubernetes') {
+
+        // ETAPA NOVA: Deploy no Kubernetes
+        stage('Deploy to Kubernetes') {
             steps {
+                // Bloco para usar o arquivo de configuração do Kubernetes de forma segura
                 withCredentials([kubeconfigContent(credentialsId: env.KUBECONFIG_CREDENTIALS_ID)]) {
-                    script{
-                        sh "kubectl set image deployment/fastapi-deployment fastapi-container=${env.DOCKER_IMAGE_NAME}:$env.BUILD_NUMBER}"
+                    script {
+                        // Comando para atualizar a imagem do contêiner no deployment existente.
+                        // Ele diz ao Kubernetes para usar a nova imagem que acabamos de enviar (com a tag do build number).
+                        sh "kubectl set image deployment/fastapi-deployment fastapi-container=${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
+
+                        // Comando para verificar o status do deploy e esperar até que ele seja concluído.
+                        // Isso garante que a nova versão está no ar antes de a pipeline terminar.
                         sh "kubectl rollout status deployment/fastapi-deployment"
                     }
                 }
@@ -39,5 +54,3 @@ pipeline {
         }
     }
 }
-
-    
