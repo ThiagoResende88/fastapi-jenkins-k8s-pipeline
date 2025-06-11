@@ -1,108 +1,65 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+# Projeto DevOps: Pipeline de CI/CD para API FastAPI com Jenkins e Kubernetes
 
-<body>
-  <h1>Desafio DevOps com FastAPI e React 🚀</h1>
+Este projeto demonstra a criação de uma pipeline de integração e entrega contínua (CI/CD) para uma aplicação backend desenvolvida com o framework FastAPI. O processo é totalmente automatizado usando Jenkins e o deploy é realizado em um cluster Kubernetes local (Minikube).
 
-  <p>Este projeto tem como objetivo integrar <strong>um backend em FastAPI</strong> com <strong>um frontend em React</strong>, além de configurar CI/CD usando <strong>Jenkins</strong> e <strong>Kubernetes</strong> (via Rancher ou Minikube). É uma oportunidade de aprender na prática como criar, containerizar, automatizar e orquestrar aplicações modernas!</p>
+## 🚀 Tecnologias Utilizadas
 
-  <h2>🎯 Desafio</h2>
+* **Backend:** FastAPI (Python)
+* **Containerização:** Docker & Docker Hub
+* **Automação (CI/CD):** Jenkins
+* **Orquestração:** Kubernetes (Minikube)
 
-  <h3>1️⃣ Backend - FastAPI</h3>
-  <ul>
-    <li>Crie 7 endpoints no backend:
-      <ul>
-        <li><code>/color</code> — Retorna uma cor aleatória para o fundo da página.</li>
-        <li><code>/cat</code> — Retorna uma imagem aleatória de gato.</li>
-        <li><code>/random-photo</code> — Retorna uma foto aleatória (ex.: via Picsum).</li>
-        <li><code>/time</code> — Retorna o horário atual do servidor.</li>
-        <li><code>/joke</code> — Redireciona para uma piada (use uma API pública).</li>
-        <li><code>/scare</code> — Retorna uma imagem de susto (ex.: GIF).</li>
-        <li><code>/lookalike</code> — Retorna uma imagem aleatória de “sósia”.</li>
-      </ul>
-    </li>
-    <li>Adicione suporte a <strong>CORS</strong> no FastAPI para permitir requisições do frontend.</li>
-  </ul>
-  <h3>3️⃣ Containerização</h3>
-  <ul>
-    <li>Crie um <code>Dockerfile</code> para o backend.</li>
-    <li>Suba as imagens no <strong>Docker Hub</strong> ou outro registry.</li>
-  </ul>
+## 📂 Estrutura do Projeto
 
-  <h3>4️⃣ Integração com Jenkins</h3>
-  <ul>
-    <li>Configure um <code>Jenkinsfile</code> para:
-      <ul>
-        <li>Buildar as imagens Docker do backend</li>
-        <li>Fazer push da imagem para o registry.</li>
-        <li>Aplicar os manifests no Kubernetes.</li>
-      </ul>
-    </li>
-  </ul>
-
-  <h3>5️⃣ Orquestração com Kubernetes</h3>
-  <ul>
-    <li>Crie manifestos Kubernetes para:
-      <ul>
-        <li>Deployments para backend e frontend.</li>
-        <li>Services para backend e frontend.</li>
-        <li>(Opcional) Um Ingress para rotear tudo bonitinho.</li>
-      </ul>
-    </li>
-  </ul>
-
-  <h2>🚀 Entregáveis</h2>
-  <ul>
-    <li>✅ Backend funcional no FastAPI.</li>
-    <li>✅ Dockerfiles para cada app.</li>
-    <li>✅ Jenkinsfile com pipeline CI/CD.</li>
-    <li>✅ Deploy no Kubernetes local (Minikube ou Rancher).</li>
-  </ul>
-
-  <h2>💡 Dicas</h2>
-  <ul>
-    <li>Use <code>uvicorn</code> com <code>--reload</code> no backend para desenvolver mais rápido.</li>
-    <li>Use <code>serve</code> para servir o build do React.</li>
-    <li>Para CORS, habilite todas as origens para dev (<code>allow_origins=["*"]</code>).</li>
-    <li>Use <code>kubectl apply -f</code> ou a interface do Rancher para aplicar os manifests.</li>
-    <li>Divirta-se — e assuste seus colegas com o endpoint <code>/scare</code>! 😱</li>
-  </ul>
-
-  <h2>📦 Estrutura sugerida</h2>
-  <pre><code>projeto-pb-automate/
-│
+```
+.
 ├── backend/
 │   ├── main.py
 │   ├── requirements.txt
 │   └── Dockerfile
-│
-├── frontend/
-│   ├── package.json
-│   ├── src/
-│   │   └── App.js
-│   └── Dockerfile
-│
+├── k8s/
+│   ├── deployment.yaml
+│   └── service.yaml
 └── Jenkinsfile
-  </code></pre>
+```
 
-  <h2>📝 Como rodar localmente</h2>
+## ⚙️ Fases do Projeto e Execução
 
-  <h3>Backend</h3>
-  <pre><code>cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload --host 0.0.0.0 --port 8000</code></pre>
+O projeto foi dividido em fases para uma construção incremental da solução.
 
-  <h3>Frontend</h3>
-  <pre><code>cd frontend
-npm install
-npm start</code></pre>
+### 1. Aplicação FastAPI
 
-  <p><strong>Acesse:</strong></p>
-  <ul>
-    <li>Frontend: <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
-    <li>Backend: <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></li>
-  </ul>
+O diretório `backend/` contém uma simples API com múltiplos endpoints, pronta para ser containerizada.
 
-  <h2>🚨 Boa sorte e bom código! 🚨</h2>
-</body>
-</html>
+### 2. Containerização com Docker
+
+O `backend/Dockerfile` contém as instruções para criar uma imagem Docker da aplicação. A imagem é enviada para o Docker Hub para que o Kubernetes possa acessá-la.
+
+### 3. Deploy Manual no Kubernetes
+
+Os manifestos em `k8s/` (`deployment.yaml` e `service.yaml`) descrevem como a aplicação deve ser executada e exposta no Kubernetes.
+
+Para aplicar manualmente:
+```bash
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+```
+Para acessar a aplicação no Minikube:
+```bash
+minikube service fastapi-service
+```
+
+### 4. Pipeline Automatizada com Jenkins
+
+O `Jenkinsfile` na raiz do projeto orquestra todo o processo de CI/CD.
+
+**Etapas da Pipeline:**
+1.  **Build Docker Image:** Constrói a imagem Docker da aplicação a partir do `Dockerfile`.
+2.  **Push to Docker Hub:** Autentica-se no Docker Hub e envia a nova imagem com uma tag única (o número do build).
+3.  **Deploy to Kubernetes:** Conecta-se ao cluster Kubernetes e atualiza a aplicação para usar a imagem recém-criada, garantindo um deploy sem interrupções.
+
+### ✅ Resultado Final
+
+Abaixo, uma imagem da pipeline no Jenkins executando todas as etapas com sucesso.
+
+
